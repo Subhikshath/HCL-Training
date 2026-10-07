@@ -1,4 +1,8 @@
 package CanteenBooking.com.user.entity;
 
-public class Role {
+public enum Role {
+
+    STUDENT,
+    STAFF,
+    ADMIN
 }
