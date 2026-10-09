@@ -81,6 +81,23 @@ public class CanteenOperatingDayService {
 
         // 5. Update today's status
         operatingDay.setOpen(request.getOpen());
+
+
+        if (request.getOpen()) {
+
+            if (request.getOperatingMode() == null) {
+                throw new IllegalArgumentException(
+                        "Operating mode is required when the canteen is open"
+                );
+            }
+
+            operatingDay.setOperatingMode(request.getOperatingMode());
+
+        } else {
+
+            operatingDay.setOperatingMode(null);
+        }
+
         operatingDay.setNote(request.getNote());
 
         // 6. Save
@@ -181,6 +198,7 @@ public class CanteenOperatingDayService {
                 operatingDay.getCanteen().getId(),
                 operatingDay.getOperatingDate(),
                 operatingDay.isOpen(),
+                operatingDay.getOperatingMode(),
                 operatingDay.getNote()
         );
     }

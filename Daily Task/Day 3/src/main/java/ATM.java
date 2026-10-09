@@ -4,39 +4,42 @@ public class ATM {
 
     public static void main(String[] args) {
 
+        String mode = System.getProperty("app.mode", "development");
+
+        System.out.println("Running in: " + mode);
+
         Scanner sc = new Scanner(System.in);
 
-        int pin = 1234;
+        int correctPin = 1234;
         int balance = 10000;
         int attempts = 0;
-        boolean login = false;
+        boolean loggedIn = false;
 
         while (attempts < 3) {
 
             System.out.print("Enter PIN: ");
             int enteredPin = sc.nextInt();
 
-            if (enteredPin == pin) {
-                login = true;
+            if (enteredPin == correctPin) {
+                loggedIn = true;
                 break;
-            } else {
-                attempts++;
-                System.out.println("Wrong PIN");
+            }
 
-                if (attempts == 3) {
-                    System.out.println("Card blocked");
-                }
+            attempts++;
+            System.out.println("Wrong PIN");
+
+            if (attempts == 3) {
+                System.out.println("Card blocked");
             }
         }
 
-        if (!login) {
+        if (!loggedIn) {
             sc.close();
             return;
         }
 
         int[] transactions = new int[10];
-        int transactionCount = 0;
-
+        int count = 0;
         int choice;
 
         do {
@@ -74,9 +77,9 @@ public class ATM {
 
                     balance = balance + deposit;
 
-                    if (transactionCount < transactions.length) {
-                        transactions[transactionCount] = deposit;
-                        transactionCount++;
+                    if (count < transactions.length) {
+                        transactions[count] = deposit;
+                        count++;
                     }
 
                     System.out.println("Deposit successful");
@@ -98,9 +101,9 @@ public class ATM {
 
                     balance = balance - withdraw;
 
-                    if (transactionCount < transactions.length) {
-                        transactions[transactionCount] = -withdraw;
-                        transactionCount++;
+                    if (count < transactions.length) {
+                        transactions[count] = -withdraw;
+                        count++;
                     }
 
                     System.out.println("Withdrawal successful");
@@ -110,6 +113,7 @@ public class ATM {
                     System.out.println("===== MINI STATEMENT =====");
 
                     for (int transaction : transactions) {
+
                         if (transaction == 0) {
                             continue;
                         }
@@ -121,7 +125,7 @@ public class ATM {
                         }
                     }
 
-                    System.out.println("Current Balance: " + balance);
+                    System.out.println("Balance: " + balance);
                     break;
 
                 case 5:

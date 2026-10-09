@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c0c7aee9-5af3-429a-82db-c651a71f1eae" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../../canteen-pre-order/src/main/java/CanteenBooking/com/session/entity/OperatingMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Day 3/ATM.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Day 3/ATM.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Day 3/Screenshot 2026-10-09 142654.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../canteen-pre-order/src/main/java/CanteenBooking/com/canteen/dto/OperatingDayRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../canteen-pre-order/src/main/java/CanteenBooking/com/canteen/dto/OperatingDayRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../canteen-pre-order/src/main/java/CanteenBooking/com/canteen/dto/OperatingDayResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../canteen-pre-order/src/main/java/CanteenBooking/com/canteen/dto/OperatingDayResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../canteen-pre-order/src/main/java/CanteenBooking/com/canteen/entity/CanteenOperatingDay.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../canteen-pre-order/src/main/java/CanteenBooking/com/canteen/entity/CanteenOperatingDay.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../canteen-pre-order/src/main/java/CanteenBooking/com/canteen/service/CanteenOperatingDayService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../canteen-pre-order/src/main/java/CanteenBooking/com/canteen/service/CanteenOperatingDayService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../canteen-pre-order/src/main/java/CanteenBooking/com/session/entity/SessionType.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../canteen-pre-order/src/main/java/CanteenBooking/com/session/entity/SessionType.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "Subhikshath"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/subhikshath/HCL-Training.git",
+    "accountId": "a103b0b9-625e-4d25-8e09-2049c830aa80"
+  }
+}]]></component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 4
+}]]></component>
+  <component name="ProjectId" id="3KS8j1eaipkvSsOqXCCmLhxIINy" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/Users/subhi/OneDrive/Desktop/HCL-TRAINING/Daily Task/demo"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration default="true" type="GroovyScriptRunConfiguration" factoryName="Groovy">
+      <setting name="path" value="" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workDir" value="file://$PROJECT_DIR$" />
+      <setting name="debug" value="false" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c0c7aee9-5af3-429a-82db-c651a71f1eae" name="Changes" comment="" />
+      <created>1791539739999</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1791539739999</updated>
+    </task>
+    <servers />
+  </component>
+</project>

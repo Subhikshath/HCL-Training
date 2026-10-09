@@ -1,5 +1,7 @@
 package CanteenBooking.com.canteen.dto;
 
+import CanteenBooking.com.session.entity.OperatingMode;
+
 import java.time.LocalDate;
 
 public class OperatingDayResponse {
@@ -8,6 +10,7 @@ public class OperatingDayResponse {
     private Long canteenId;
     private LocalDate operatingDate;
     private boolean open;
+    private OperatingMode operatingMode;
     private String note;
 
     public OperatingDayResponse() {
@@ -18,12 +21,14 @@ public class OperatingDayResponse {
             Long canteenId,
             LocalDate operatingDate,
             boolean open,
+            OperatingMode operatingMode,
             String note
     ) {
         this.id = id;
         this.canteenId = canteenId;
         this.operatingDate = operatingDate;
         this.open = open;
+        this.operatingMode = operatingMode;
         this.note = note;
     }
 
@@ -57,6 +62,14 @@ public class OperatingDayResponse {
 
     public void setOpen(boolean open) {
         this.open = open;
+    }
+
+    public OperatingMode getOperatingMode() {
+        return operatingMode;
+    }
+
+    public void setOperatingMode(OperatingMode operatingMode) {
+        this.operatingMode = operatingMode;
     }
 
     public String getNote() {

@@ -1,5 +1,6 @@
 package CanteenBooking.com.canteen.entity;
 
+import CanteenBooking.com.session.entity.OperatingMode;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -29,6 +30,10 @@ public class CanteenOperatingDay {
     @Column(nullable = false)
     private boolean open;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "operating_mode")
+    private OperatingMode operatingMode;
+
     @Column(length = 255)
     private String note;
 
@@ -39,20 +44,18 @@ public class CanteenOperatingDay {
             Canteen canteen,
             LocalDate operatingDate,
             boolean open,
+            OperatingMode operatingMode,
             String note
     ) {
         this.canteen = canteen;
         this.operatingDate = operatingDate;
         this.open = open;
+        this.operatingMode = operatingMode;
         this.note = note;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Canteen getCanteen() {
@@ -77,6 +80,14 @@ public class CanteenOperatingDay {
 
     public void setOpen(boolean open) {
         this.open = open;
+    }
+
+    public OperatingMode getOperatingMode() {
+        return operatingMode;
+    }
+
+    public void setOperatingMode(OperatingMode operatingMode) {
+        this.operatingMode = operatingMode;
     }
 
     public String getNote() {
