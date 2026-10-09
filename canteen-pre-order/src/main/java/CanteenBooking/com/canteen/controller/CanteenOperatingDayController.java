@@ -3,9 +3,7 @@ package CanteenBooking.com.canteen.controller;
 import CanteenBooking.com.canteen.dto.OperatingDayRequest;
 import CanteenBooking.com.canteen.dto.OperatingDayResponse;
 import CanteenBooking.com.canteen.service.CanteenOperatingDayService;
-
 import jakarta.validation.Valid;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +20,16 @@ public class CanteenOperatingDayController {
         this.operatingDayService = operatingDayService;
     }
 
-
     /*
-     * STAFF can update today's canteen status.
+     * STAFF can update today's canteen status
+     * only if the canteen is assigned to that staff.
+     *
+     * ADMIN can update any canteen.
      */
     @PutMapping("/today")
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize(
+            "@staffAuthorizationService.canManageCanteen(authentication, #canteenId)"
+    )
     public ResponseEntity<OperatingDayResponse> updateTodayStatus(
             @PathVariable Long canteenId,
             @Valid @RequestBody OperatingDayRequest request
@@ -41,7 +43,6 @@ public class CanteenOperatingDayController {
 
         return ResponseEntity.ok(response);
     }
-
 
     /*
      * STUDENT can view today's canteen status.

@@ -1,10 +1,18 @@
 package CanteenBooking.com.user.entity;
 
 import jakarta.persistence.*;
+import CanteenBooking.com.canteen.entity.Canteen;
 
 @Entity
 @Table(name = "users")
 public class User {
+
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "canteen_id")
+    private Canteen assignedCanteen;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -101,5 +109,13 @@ public class User {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Canteen getAssignedCanteen() {
+        return assignedCanteen;
+    }
+
+    public void setAssignedCanteen(Canteen assignedCanteen) {
+        this.assignedCanteen = assignedCanteen;
     }
 }
