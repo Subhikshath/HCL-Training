@@ -149,10 +149,14 @@ public class JwtAuthenticationFilter
                     userDetails.getUsername()
             )) {
 
+//                System.out.println(
+//                        "JWT USER: " + userDetails.getUsername()
+//                );
+//
+//                System.out.println(
+//                        "JWT AUTHORITIES: " + userDetails.getAuthorities()
+//                );
 
-                /*
-                 * Create authenticated user.
-                 */
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails,
@@ -160,19 +164,11 @@ public class JwtAuthenticationFilter
                                 userDetails.getAuthorities()
                         );
 
-
-                /*
-                 * Add request details.
-                 */
                 authentication.setDetails(
                         new WebAuthenticationDetailsSource()
                                 .buildDetails(request)
                 );
 
-
-                /*
-                 * Store authentication in Spring Security context.
-                 */
                 SecurityContextHolder
                         .getContext()
                         .setAuthentication(authentication);

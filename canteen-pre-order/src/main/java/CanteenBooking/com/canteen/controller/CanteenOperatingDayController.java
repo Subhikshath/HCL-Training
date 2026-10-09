@@ -7,6 +7,7 @@ import CanteenBooking.com.canteen.service.CanteenOperatingDayService;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,10 +22,12 @@ public class CanteenOperatingDayController {
         this.operatingDayService = operatingDayService;
     }
 
+
     /*
-     * Staff updates today's status.
+     * STAFF can update today's canteen status.
      */
     @PutMapping("/today")
+    @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<OperatingDayResponse> updateTodayStatus(
             @PathVariable Long canteenId,
             @Valid @RequestBody OperatingDayRequest request
@@ -39,10 +42,14 @@ public class CanteenOperatingDayController {
         return ResponseEntity.ok(response);
     }
 
+
     /*
-     * Student views today's status.
+     * STUDENT can view today's canteen status.
+     *
+     * ADMIN and STAFF are also allowed to view it.
      */
     @GetMapping("/today")
+    @PreAuthorize("hasAnyRole('STUDENT', 'STAFF', 'ADMIN')")
     public ResponseEntity<OperatingDayResponse> getTodayStatus(
             @PathVariable Long canteenId
     ) {
