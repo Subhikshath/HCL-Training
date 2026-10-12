@@ -18,4 +18,6 @@ public interface CanteenOperatingDayRepository
     List<CanteenOperatingDay> findByOperatingDate(
             LocalDate operatingDate
     );
+
+
 }

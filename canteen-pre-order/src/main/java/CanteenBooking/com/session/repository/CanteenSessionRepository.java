@@ -1,6 +1,5 @@
 package CanteenBooking.com.session.repository;
 
-
 import CanteenBooking.com.session.entity.CanteenSession;
 import CanteenBooking.com.session.entity.SessionType;
 import org.springframework.data.jpa.repository.JpaRepository;

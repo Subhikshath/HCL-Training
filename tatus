@@ -1,0 +1,16 @@
+* [33m63679cb[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/refund[m[33m)[m Update card refund message
+* [33m6c30960[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m Update UPI refund message
+*   [33m76f3a81[m Resolve payment message conflict
+[32m|[m[33m\[m  
+[32m|[m * [33m718bb67[m[33m ([m[1;32mfeature/upi-payment[m[33m)[m Change card payment message
+* [33m|[m [33m45d1637[m[33m ([m[1;32mfeature/card-payment[m[33m)[m Update card payment message
+[33m|[m[33m/[m  
+* [33m2125d45[m Add payment hierarchy
+* [33m56d6a42[m Day 3 modified on day 4
+* [33m92ac5c1[m day 3 daily task
+* [33m5dae6e1[m ongoing with session on day 4
+* [33m00d860f[m day 4 with canteen user assignement by admin
+* [33mfe0c673[m day 3 with daily task
+* [33m5d68a02[m day 3 canteen building
+* [33me540cdb[m day2
+* [33m5fd12b8[m Initial commit - Boiler plate

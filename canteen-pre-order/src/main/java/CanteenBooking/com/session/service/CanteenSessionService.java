@@ -1,13 +1,17 @@
 package CanteenBooking.com.session.service;
 
 import CanteenBooking.com.canteen.entity.Canteen;
+import CanteenBooking.com.canteen.entity.CanteenOperatingDay;
 import CanteenBooking.com.canteen.entity.ContractStatus;
+import CanteenBooking.com.canteen.repository.CanteenOperatingDayRepository;
 import CanteenBooking.com.canteen.repository.CanteenRepository;
+import CanteenBooking.com.common.exception.ResourceNotFoundException;
 import CanteenBooking.com.session.dto.SessionRequest;
 import CanteenBooking.com.session.dto.SessionResponse;
 import CanteenBooking.com.session.entity.CanteenSession;
+import CanteenBooking.com.session.entity.OperatingMode;
+import CanteenBooking.com.session.entity.SessionType;
 import CanteenBooking.com.session.repository.CanteenSessionRepository;
-import CanteenBooking.com.common.exception.ResourceNotFoundException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,13 +25,16 @@ public class CanteenSessionService {
 
     private final CanteenRepository canteenRepository;
     private final CanteenSessionRepository sessionRepository;
+    private final CanteenOperatingDayRepository operatingDayRepository;
 
     public CanteenSessionService(
             CanteenRepository canteenRepository,
-            CanteenSessionRepository sessionRepository
+            CanteenSessionRepository sessionRepository,
+            CanteenOperatingDayRepository operatingDayRepository
     ) {
         this.canteenRepository = canteenRepository;
         this.sessionRepository = sessionRepository;
+        this.operatingDayRepository = operatingDayRepository;
     }
 
     @Transactional
@@ -49,9 +56,22 @@ public class CanteenSessionService {
             );
         }
 
+        // Get today's operating-day configuration
+        CanteenOperatingDay operatingDay =
+                getTodayOperatingDay(canteenId);
+
+        // Check whether requested session matches operating mode
+        validateSessionType(
+                operatingDay.getOperatingMode(),
+                request.getSessionType()
+        );
+
         LocalDate today = LocalDate.now();
 
-        validateTime(request.getStartTime(), request.getEndTime());
+        validateTime(
+                request.getStartTime(),
+                request.getEndTime()
+        );
 
         if (sessionRepository
                 .existsByCanteenIdAndSessionDateAndSessionType(
@@ -135,6 +155,16 @@ public class CanteenSessionService {
             );
         }
 
+        // Get today's operating-day configuration
+        CanteenOperatingDay operatingDay =
+                getTodayOperatingDay(canteenId);
+
+        // Check whether the new session type matches today's mode
+        validateSessionType(
+                operatingDay.getOperatingMode(),
+                request.getSessionType()
+        );
+
         validateTime(
                 request.getStartTime(),
                 request.getEndTime()
@@ -184,12 +214,78 @@ public class CanteenSessionService {
         sessionRepository.save(session);
     }
 
+    /**
+     * Gets today's operating-day configuration.
+     */
+    private CanteenOperatingDay getTodayOperatingDay(
+            Long canteenId
+    ) {
+
+        LocalDate today = LocalDate.now();
+
+        CanteenOperatingDay operatingDay =
+                operatingDayRepository
+                        .findByCanteenIdAndOperatingDate(
+                                canteenId,
+                                today
+                        )
+                        .orElseThrow(() ->
+                                new IllegalStateException(
+                                        "Today's operating status has not been configured"
+                                )
+                        );
+
+        if (!operatingDay.isOpen()) {
+            throw new IllegalStateException(
+                    "Canteen is closed today"
+            );
+        }
+
+        if (operatingDay.getOperatingMode() == null) {
+            throw new IllegalStateException(
+                    "Operating mode has not been configured for today"
+            );
+        }
+
+        return operatingDay;
+    }
+
+    /**
+     * Makes sure the session type matches the
+     * operating mode of the canteen for today.
+     */
+    private void validateSessionType(
+            OperatingMode operatingMode,
+            SessionType sessionType
+    ) {
+
+        if (operatingMode == OperatingMode.FULL_DAY) {
+
+            if (sessionType != SessionType.FULL_DAY) {
+
+                throw new IllegalStateException(
+                        "FULL_DAY operating mode allows only FULL_DAY session"
+                );
+            }
+
+        } else if (operatingMode == OperatingMode.SESSION_BASED) {
+
+            if (sessionType == SessionType.FULL_DAY) {
+
+                throw new IllegalStateException(
+                        "SESSION_BASED operating mode does not allow FULL_DAY session"
+                );
+            }
+        }
+    }
+
     private void validateTime(
             LocalTime startTime,
             LocalTime endTime
     ) {
 
         if (!startTime.isBefore(endTime)) {
+
             throw new IllegalStateException(
                     "Session start time must be before end time"
             );

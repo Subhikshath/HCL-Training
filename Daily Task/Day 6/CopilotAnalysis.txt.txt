@@ -1,0 +1,80 @@
+Day 6 - Order Processor and Copilot Stack Trace Analysis
+
+1. Objective
+
+The objective of this task is to implement an Order Processor using custom checked and unchecked exceptions, exception chaining, multi-catch, and finally-based audit logging. Two Java stack traces were analyzed using GitHub Copilot Chat, and its explanations were verified against the source code.
+
+2. Java Concepts Implemented
+
+InsufficientStockException: A custom checked exception extending Exception.
+
+InvalidQuantityException: A custom unchecked exception extending RuntimeException.
+
+Exception chaining: The original insufficient-stock exception is preserved as the cause of a new exception.
+
+Multi-catch: Both exception types are handled in a single catch block.
+
+Finally audit: The finally block prints an audit message for every order-processing attempt.
+
+3. Stack Trace 1 - InsufficientStockException
+
+Stack Trace
+
+InsufficientStockException: Order processing failed
+at OrderProcessor.processOrder(OrderProcessor.java:48)
+at OrderProcessor.main(OrderProcessor.java:66)
+Caused by: InsufficientStockException: Requested quantity exceeds available stock
+at OrderProcessor.processOrder(OrderProcessor.java:34)
+... 1 more
+
+Copilot's Explanation
+
+Copilot explained that InsufficientStockException is a checked exception because it extends Exception. The original exception is thrown at line 34, and a second exception is created at line 48 to wrap the original exception. The Caused by section identifies the original exception and preserves its details. The ... 1 more notation means that a shared stack frame is omitted because it has already been displayed in the outer exception's stack trace.
+
+What Was Right
+
+Correctly identified the checked exception.
+
+Correctly explained the original exception and the wrapper exception.
+
+Correctly explained exception chaining and the Caused by section.
+
+Correctly explained the meaning of ... 1 more.
+
+Correctly identified the relevant source lines in the actual stack trace.
+
+What Was Wrong or Incomplete
+
+Initially, Copilot gave a general explanation and stated that the actual stack trace was not included. Therefore, it did not identify the specific source lines in that response. After providing the actual trace, the explanation could be verified against the code.
+
+4. Stack Trace 2 - InvalidQuantityException
+
+Stack Trace
+
+InvalidQuantityException: Quantity must be greater than zero
+at OrderProcessor.processOrder(OrderProcessor.java:29)
+at OrderProcessor.main(OrderProcessor.java:66)
+
+Copilot's Explanation
+
+Copilot explained that InvalidQuantityException is thrown at line 29 when quantity is less than or equal to zero. It is an unchecked exception because it extends RuntimeException. The exception is rethrown from processOrder() and propagates to main(), where the multi-catch block handles it. The finally block prints the audit message before the exception reaches the caller. There is no Caused by section because the exception was created without attaching an underlying cause.
+
+What Was Right
+
+Correctly identified the exception type and source line.
+
+Correctly explained why the exception is unchecked.
+
+Correctly described how the exception propagates to main().
+
+Correctly explained why there is no Caused by section.
+
+Correctly explained the execution of the finally block.
+
+What Was Wrong or Incomplete
+
+No significant technical errors were found in the explanation, assuming the cited line numbers match the current source code.
+
+5. Conclusion
+
+The Order Processor demonstrates custom checked and unchecked exceptions, exception chaining, multi-catch, and finally-based audit logging. GitHub Copilot helped explain the two stack traces. Its explanations were checked against the source code and program output. The first response was initially incomplete because it did not use the actual stack trace, but the later explanations correctly described the exceptions and their propagation.
