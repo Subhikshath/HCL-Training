@@ -1,4 +1,7 @@
+
 package CanteenBooking.com.menu.entity;
 
-public class MenuType {
+public enum MenuType {
+    VEG,
+    NON_VEG
 }

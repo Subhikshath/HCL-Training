@@ -1,11 +1,11 @@
 package CanteenBooking.com.session.repository;
 
-
 import CanteenBooking.com.session.entity.CanteenSession;
 import CanteenBooking.com.session.entity.SessionType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,5 +32,20 @@ public interface CanteenSessionRepository
             Long canteenId,
             LocalDate sessionDate,
             SessionType sessionType
+    );
+
+    boolean existsByCanteenIdAndSessionDateAndActiveTrueAndStartTimeLessThanAndEndTimeGreaterThan(
+            Long canteenId,
+            LocalDate sessionDate,
+            LocalTime endTime,
+            LocalTime startTime
+    );
+
+    boolean existsByCanteenIdAndSessionDateAndActiveTrueAndStartTimeLessThanAndEndTimeGreaterThanAndIdNot(
+            Long canteenId,
+            LocalDate sessionDate,
+            LocalTime endTime,
+            LocalTime startTime,
+            Long sessionId
     );
 }

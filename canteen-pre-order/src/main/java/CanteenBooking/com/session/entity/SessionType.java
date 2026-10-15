@@ -4,7 +4,6 @@ public enum SessionType {
 
     FULL_DAY,
     BREAKFAST,
-    MORNING,
     LUNCH,
     EVENING,
     DINNER

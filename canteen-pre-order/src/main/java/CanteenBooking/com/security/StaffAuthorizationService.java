@@ -1,3 +1,4 @@
+
 package CanteenBooking.com.security;
 
 import CanteenBooking.com.user.entity.User;
@@ -17,13 +18,16 @@ public class StaffAuthorizationService {
 
     public boolean canManageCanteen(
             Authentication authentication,
-            Long canteenId
-    ) {
+            Long canteenId) {
 
-        // Get logged-in user's email
+        if (authentication == null
+                || !authentication.isAuthenticated()
+                || authentication.getName() == null) {
+            return false;
+        }
+
         String email = authentication.getName();
 
-        // Find logged-in user
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new IllegalStateException(
@@ -31,30 +35,22 @@ public class StaffAuthorizationService {
                         )
                 );
 
-        /*
-         * ADMIN can manage any canteen.
-         */
+        // ADMIN can manage any canteen.
         if (user.getRole() == Role.ADMIN) {
             return true;
         }
 
-        /*
-         * Only STAFF can continue from here.
-         */
+        // Only STAFF can continue.
         if (user.getRole() != Role.STAFF) {
             return false;
         }
 
-        /*
-         * STAFF must have a canteen assigned.
-         */
+        // STAFF must have an assigned canteen.
         if (user.getAssignedCanteen() == null) {
             return false;
         }
 
-        /*
-         * STAFF can manage only their assigned canteen.
-         */
+        // STAFF can manage only their assigned canteen.
         return user.getAssignedCanteen()
                 .getId()
                 .equals(canteenId);

@@ -1,13 +1,17 @@
 package CanteenBooking.com.session.service;
 
 import CanteenBooking.com.canteen.entity.Canteen;
+import CanteenBooking.com.canteen.entity.CanteenOperatingDay;
 import CanteenBooking.com.canteen.entity.ContractStatus;
+import CanteenBooking.com.canteen.repository.CanteenOperatingDayRepository;
 import CanteenBooking.com.canteen.repository.CanteenRepository;
+import CanteenBooking.com.common.exception.ResourceNotFoundException;
 import CanteenBooking.com.session.dto.SessionRequest;
 import CanteenBooking.com.session.dto.SessionResponse;
 import CanteenBooking.com.session.entity.CanteenSession;
+import CanteenBooking.com.session.entity.OperatingMode;
+import CanteenBooking.com.session.entity.SessionType;
 import CanteenBooking.com.session.repository.CanteenSessionRepository;
-import CanteenBooking.com.common.exception.ResourceNotFoundException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,13 +25,16 @@ public class CanteenSessionService {
 
     private final CanteenRepository canteenRepository;
     private final CanteenSessionRepository sessionRepository;
+    private final CanteenOperatingDayRepository operatingDayRepository;
 
     public CanteenSessionService(
             CanteenRepository canteenRepository,
-            CanteenSessionRepository sessionRepository
+            CanteenSessionRepository sessionRepository,
+            CanteenOperatingDayRepository operatingDayRepository
     ) {
         this.canteenRepository = canteenRepository;
         this.sessionRepository = sessionRepository;
+        this.operatingDayRepository = operatingDayRepository;
     }
 
     @Transactional
@@ -49,9 +56,27 @@ public class CanteenSessionService {
             );
         }
 
+        CanteenOperatingDay operatingDay =
+                getTodayOperatingDay(canteenId);
+
+        validateSessionType(
+                operatingDay.getOperatingMode(),
+                request.getSessionType()
+        );
+
         LocalDate today = LocalDate.now();
 
-        validateTime(request.getStartTime(), request.getEndTime());
+        validateTime(
+                request.getStartTime(),
+                request.getEndTime()
+        );
+
+        validateNoOverlap(
+                canteenId,
+                today,
+                request.getStartTime(),
+                request.getEndTime()
+        );
 
         if (sessionRepository
                 .existsByCanteenIdAndSessionDateAndSessionType(
@@ -127,18 +152,51 @@ public class CanteenSessionService {
             );
         }
 
-        if (!session.getSessionDate()
-                .equals(LocalDate.now())) {
+        LocalDate today = LocalDate.now();
 
+        if (!session.getSessionDate().equals(today)) {
             throw new IllegalStateException(
                     "Only today's session can be updated"
             );
         }
 
+        CanteenOperatingDay operatingDay =
+                getTodayOperatingDay(canteenId);
+
+        validateSessionType(
+                operatingDay.getOperatingMode(),
+                request.getSessionType()
+        );
+
         validateTime(
                 request.getStartTime(),
                 request.getEndTime()
         );
+
+        validateNoOverlapForUpdate(
+                canteenId,
+                sessionId,
+                today,
+                request.getStartTime(),
+                request.getEndTime()
+        );
+
+        if (!session.getSessionType()
+                .equals(request.getSessionType())) {
+
+            if (sessionRepository
+                    .existsByCanteenIdAndSessionDateAndSessionType(
+                            canteenId,
+                            today,
+                            request.getSessionType()
+                    )) {
+
+                throw new IllegalStateException(
+                        "Session already exists for today: "
+                                + request.getSessionType()
+                );
+            }
+        }
 
         session.setSessionType(request.getSessionType());
         session.setStartTime(request.getStartTime());
@@ -184,14 +242,123 @@ public class CanteenSessionService {
         sessionRepository.save(session);
     }
 
+    private CanteenOperatingDay getTodayOperatingDay(
+            Long canteenId
+    ) {
+
+        LocalDate today = LocalDate.now();
+
+        CanteenOperatingDay operatingDay =
+                operatingDayRepository
+                        .findByCanteenIdAndOperatingDate(
+                                canteenId,
+                                today
+                        )
+                        .orElseThrow(() ->
+                                new IllegalStateException(
+                                        "Today's operating status has not been configured"
+                                )
+                        );
+
+        if (!operatingDay.isOpen()) {
+            throw new IllegalStateException(
+                    "Canteen is closed today"
+            );
+        }
+
+        if (operatingDay.getOperatingMode() == null) {
+            throw new IllegalStateException(
+                    "Operating mode has not been configured for today"
+            );
+        }
+
+        return operatingDay;
+    }
+
+    private void validateSessionType(
+            OperatingMode operatingMode,
+            SessionType sessionType
+    ) {
+
+        if (operatingMode == OperatingMode.FULL_DAY) {
+
+            if (sessionType != SessionType.FULL_DAY) {
+
+                throw new IllegalStateException(
+                        "FULL_DAY operating mode allows only FULL_DAY session"
+                );
+            }
+
+        } else if (operatingMode == OperatingMode.SESSION_BASED) {
+
+            if (sessionType == SessionType.FULL_DAY) {
+
+                throw new IllegalStateException(
+                        "SESSION_BASED operating mode does not allow FULL_DAY session"
+                );
+            }
+        }
+    }
+
     private void validateTime(
             LocalTime startTime,
             LocalTime endTime
     ) {
 
         if (!startTime.isBefore(endTime)) {
+
             throw new IllegalStateException(
                     "Session start time must be before end time"
+            );
+        }
+    }
+
+    private void validateNoOverlap(
+            Long canteenId,
+            LocalDate sessionDate,
+            LocalTime startTime,
+            LocalTime endTime
+    ) {
+
+        boolean overlap =
+                sessionRepository
+                        .existsByCanteenIdAndSessionDateAndActiveTrueAndStartTimeLessThanAndEndTimeGreaterThan(
+                                canteenId,
+                                sessionDate,
+                                endTime,
+                                startTime
+                        );
+
+        if (overlap) {
+
+            throw new IllegalStateException(
+                    "Session time overlaps with an existing session"
+            );
+        }
+    }
+
+    private void validateNoOverlapForUpdate(
+            Long canteenId,
+            Long sessionId,
+            LocalDate sessionDate,
+            LocalTime startTime,
+            LocalTime endTime
+    ) {
+
+        boolean overlap =
+                sessionRepository
+                        .existsByCanteenIdAndSessionDateAndActiveTrueAndStartTimeLessThanAndEndTimeGreaterThanAndIdNot(
+                                canteenId,
+                                sessionDate,
+                                endTime,
+                                startTime,
+                                sessionId
+                        );
+
+        if (overlap) {
+
+            throw new IllegalStateException(
+                    "Session time overlaps with an existing session"
             );
         }
     }
